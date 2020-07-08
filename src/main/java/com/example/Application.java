@@ -17,11 +17,12 @@
 package com.example;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+import org.apache.camel.component.amqp.AMQPComponent;
 import org.apache.camel.component.jms.JmsComponent;
+import org.apache.qpid.jms.JmsConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
 
 import javax.jms.JMSException;
 
@@ -36,16 +37,23 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+
     @Bean
     public JmsComponent jmsComponent() throws JMSException {
         // Create the connectionfactory which will be used to connect to Artemis
         ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory();
-        cf.setBrokerURL("(tcp://localhost:61616,tcp://localhost:61716)?initialReconnectDelay=100");
+        cf.setBrokerURL("tcp://localhost:61616");
         cf.setUser("admin");
         cf.setPassword("admin");
         JmsComponent jms = new JmsComponent();
         jms.setConnectionFactory(cf);
         return jms;
+    }
+
+    @Bean
+    AMQPComponent amqp() {
+        JmsConnectionFactory qpid = new JmsConnectionFactory("admin", "admin", "amqp://localhost:5672");
+        return new AMQPComponent(qpid);
     }
 
 

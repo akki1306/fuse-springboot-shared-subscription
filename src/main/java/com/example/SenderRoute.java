@@ -4,7 +4,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jms.JmsConstants;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class SenderRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
