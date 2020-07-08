@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class FirstSubscriberRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("amqp:topic:mytopic?subscriptionDurable=true&durableSubscriptionName=test555&subscriptionName=test555&subscriptionShared=true")
+        from("amqp:topic://mytopic?subscriptionDurable=true&subscriptionName=test777&subscriptionShared=true")
                 .log("Received message in First Subscriber");
     }
 }

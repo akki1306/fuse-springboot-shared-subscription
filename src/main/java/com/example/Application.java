@@ -37,19 +37,6 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-
-    @Bean
-    public JmsComponent jmsComponent() throws JMSException {
-        // Create the connectionfactory which will be used to connect to Artemis
-        ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory();
-        cf.setBrokerURL("tcp://localhost:61616");
-        cf.setUser("admin");
-        cf.setPassword("admin");
-        JmsComponent jms = new JmsComponent();
-        jms.setConnectionFactory(cf);
-        return jms;
-    }
-
     @Bean
     AMQPComponent amqp() {
         JmsConnectionFactory qpid = new JmsConnectionFactory("admin", "admin", "amqp://localhost:5672");
