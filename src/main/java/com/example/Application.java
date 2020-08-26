@@ -22,13 +22,15 @@ import org.apache.camel.component.jms.JmsComponent;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 
+import javax.jms.JMSContext;
 import javax.jms.JMSException;
 
 
-@SpringBootApplication(scanBasePackages = "com.example")
-public class Application {
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer {
 
     /**
      * A main method to start this application.
@@ -39,9 +41,22 @@ public class Application {
 
     @Bean
     AMQPComponent amqp() {
-        JmsConnectionFactory qpid = new JmsConnectionFactory("admin", "admin", "amqp://localhost:5672");
-        return new AMQPComponent(qpid);
+        JmsConnectionFactory qpid = new JmsConnectionFactory("admin", "admin", "amqp://localhost:5673");
+        AMQPComponent amqpComponent = new AMQPComponent(qpid);
+        amqpComponent.setAcknowledgementModeName("CLIENT_ACKNOWLEDGE");
+        return amqpComponent;
     }
 
+
+    @Bean
+    public JmsComponent jmsComponent() throws JMSException {
+        // Create the connectionfactory which will be used to connect to Artemis
+        ActiveMQConnectionFactory cf = new ActiveMQConnectionFactory("(tcp://localhost:61616,tcp://localhost:61716)?initialReconnectDelay=100");
+        cf.setUser("admin");
+        cf.setPassword("admin");
+        JmsComponent jms = new JmsComponent();
+        jms.setConnectionFactory(cf);
+        return jms;
+    }
 
 }

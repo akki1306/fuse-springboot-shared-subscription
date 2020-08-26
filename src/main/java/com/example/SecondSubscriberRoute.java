@@ -3,11 +3,14 @@ package com.example;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
-//@Component
+@Component
 public class SecondSubscriberRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("jms:topic:mytopic?subscriptionDurable=true&durableSubscriptionName=hello123&subscriptionShared=true")
-                .log("Received message in Second Subscriber");
+        //from("amqp:queue:myqueue?subscriptionDurable=true&durableSubscriptionName=anotherSDS&subscriptionShared=true")
+        from("amqp:queue:myqueue")
+                .log("Received message in the first route " + body())
+                .process(e -> Thread.sleep(25000))
+                .log("Finished Processing Message " +body() );
     }
 }
